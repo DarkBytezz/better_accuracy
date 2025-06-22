@@ -4,6 +4,7 @@ import yfinance as yf
 import pandas as pd
 import numpy as np
 import joblib
+from fastapi.middleware.cors import CORSMiddleware
 from indicators import add_indicators
 
 # Load model and features
@@ -11,7 +12,13 @@ model = joblib.load('../models/tcs_model.pkl')
 features = joblib.load('../models/tcs_features.pkl')
 
 app = FastAPI()
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # change this to your frontend URL in prod
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 reverse_map = {0: "SELL 🚨", 1: "HOLD 🧘‍♂️", 2: "BUY 💸"}
 
 @app.get("/")
